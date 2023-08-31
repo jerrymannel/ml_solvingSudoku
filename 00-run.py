@@ -2,9 +2,10 @@ import mss, pyautogui
 from pynput.mouse import Listener, Controller
 
 # Globals
+monitor = 1
 duration = 0.1 # Duration of the mouse movement
 # topLeft = (0, 0)
-topLeft = (1926, 225)
+topLeft = (40, 267)
 topRight = (0, 0)
 bottomRight = (0, 0)
 bottomLeft = (0, 0)
@@ -15,7 +16,7 @@ newGameButton = (2617, 687)
 
 counter = 0
 cellStartOffset = 25;
-startingPosition = (topLeft[0] + cellStartOffset, topLeft[1] + cellStartOffset)
+startingPosition = (0, 0)
 offset = 50
 offsetMatrix = {
 	"x": [],
@@ -31,7 +32,7 @@ def generateOffsetMatrix():
 
 def takeScreenShot():
 	with mss.mss() as sct:
-		filename = sct.shot(output="./images/screen.png", mon=2)
+		filename = sct.shot(output="./images/screen.png", mon=monitor)
 		print(filename)
 
 
@@ -49,8 +50,8 @@ def on_click(x, y, button, pressed):
 
 def mapCoordinates():
 	print('Click on the top left corner of the grid.')
-	# with Listener(on_click=on_click) as listener:
-	# 	listener.join()
+	with Listener(on_click=on_click) as listener:
+		listener.join()
 
 
 def takeScreenshotOfASpecificArea(topLeft, bottomRight):
@@ -58,26 +59,24 @@ def takeScreenshotOfASpecificArea(topLeft, bottomRight):
 		monitor = {"top": topLeft[1], "left": topLeft[0], "width": bottomRight[0] - topLeft[0], "height": bottomRight[1] - topLeft[1]}
 		return sct.grab(monitor)
 
-def getCellCoordinates(x, y):
-	calcOffSet = offsetMatrix[x][y]
-	print('Position offset from starting: {0}'.format(calcOffSet))
-	position = (startingPosition[0] + calcOffSet[0], startingPosition[1] + calcOffSet[1])
-	print('Position:                      {0}'.format(position))
-	return position
 
 def understandTheGrid():
 	x, y = 0, 0
+	for y in range(0, 9):
+		for x in range(0, 9):
+			pyautogui.moveTo(offsetMatrix["x"][x], offsetMatrix["y"][y], duration=duration)
 	pyautogui.moveTo(offsetMatrix["x"][x], offsetMatrix["y"][y], duration=duration)
 	# takeScreenshotOfASpecificArea()
 
 
 if __name__ == '__main__':
-	# takeScreenShot()
-	mapCoordinates()
+	takeScreenShot()
+	# mapCoordinates()
 	
 	topRight = (topLeft[0] + widthOfGrid, topLeft[1])
 	bottomRight = (topLeft[0] + widthOfGrid, topLeft[1] + heightOfGrid)
 	bottomLeft = (topLeft[0], topLeft[1] + heightOfGrid)
+	startingPosition = (topLeft[0] + cellStartOffset, topLeft[1] + cellStartOffset)
 	print('Top left:          {0}'.format(topLeft))
 	print('Top right:         {0}'.format(topRight))
 	print('Bottom right:      {0}'.format(bottomRight))
@@ -97,6 +96,4 @@ if __name__ == '__main__':
 	# pyautogui.moveTo(bottomLeft, duration=duration)
 	# pyautogui.moveTo(newGameButton, duration=duration)
 	understandTheGrid()
-
-	# position = getCellCoordinates(0, 0)
 			
