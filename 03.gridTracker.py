@@ -10,10 +10,13 @@ savedMapImage = "./images/map.png"
 
 duration = 0
 
-topLeft = (310, 267)
-topRight = (810, 267)
-bottomRight = (810, 765)
-bottomLeft = (310, 765)
+# topLeft = (40, 267)
+topLeft = (80, 267*2)
+heightOfGrid = 1000
+widthOfGrid = 1000
+topRight = (topLeft[0] + widthOfGrid, topLeft[1])
+bottomRight = (topLeft[0] + widthOfGrid, topLeft[1] + heightOfGrid)
+bottomLeft = (topLeft[0], topLeft[1] + heightOfGrid)
 print('Top left:          {0}'.format(topLeft))
 print('Top right:         {0}'.format(topRight))
 print('Bottom right:      {0}'.format(bottomRight))
@@ -24,10 +27,8 @@ gridBottomRight = (419, 319)
 print('Grid top left:     {0}'.format(gridTopLeft))
 print('Grid bottom right: {0}'.format(gridBottomRight))
 
-gridWidth = gridBottomRight[0] - gridTopLeft[0]
-gridHeight = gridBottomRight[1] - gridTopLeft[1]
-print('Grid width:        {0}'.format(gridWidth))
-print('Grid height:       {0}'.format(gridHeight))
+print('Grid width:        {0}'.format(widthOfGrid))
+print('Grid height:       {0}'.format(heightOfGrid))
 
 pyautogui.moveTo(topLeft, duration=duration)
 pyautogui.moveTo(topRight, duration=duration)
@@ -49,6 +50,7 @@ print('* Bottom left      {0}'.format(newBottomLeft))
 
 image = opencvImage.copy()
 height, width = image.shape[:2]
+print(1800,1169)
 print('Image width:       {0}'.format(width))
 print('Image height:      {0}'.format(height))
 
@@ -65,5 +67,3 @@ cv2.circle(image, topRight, radius, (0, 0, 255), 10)
 cv2.circle(image, bottomRight, radius, (0, 0, 255), 10)
 cv2.circle(image, bottomLeft, radius, (0, 0, 255), 10)
 cv2.imwrite(savedMapImage, image)
-
-# cv2.imshow("Processes", image)

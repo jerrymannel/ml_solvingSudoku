@@ -1,9 +1,11 @@
-import mss, pyautogui
+import mss, pyautogui, cv2
+import numpy as np
 from pynput.mouse import Listener, Controller
 
 # Globals
 monitor = 1
-duration = 0.1 # Duration of the mouse movement
+duration = 0.0 # Duration of the mouse movement
+scale = 1.0 # Scale of the screenshot
 # topLeft = (0, 0)
 topLeft = (40, 267)
 topRight = (0, 0)
@@ -15,7 +17,7 @@ widthOfGrid = 500
 newGameButton = (2617, 687)
 
 counter = 0
-cellStartOffset = 25;
+cellStartOffset = 30;
 startingPosition = (0, 0)
 offset = 50
 offsetMatrix = {
@@ -54,10 +56,28 @@ def mapCoordinates():
 		listener.join()
 
 
-def takeScreenshotOfASpecificArea(topLeft, bottomRight):
+def takeScreenshotOfCell(x, y):
+	trimValue = 5
+	x = x - offset/2 + trimValue
+	y = y - offset/2 + trimValue
+	length = offset - (trimValue * 3)
 	with mss.mss() as sct:
-		monitor = {"top": topLeft[1], "left": topLeft[0], "width": bottomRight[0] - topLeft[0], "height": bottomRight[1] - topLeft[1]}
-		return sct.grab(monitor)
+		monitor = {
+			"top": y, 
+			"left": x,
+			"width": length, 
+			"height": length
+		}
+	cell = np.array(sct.grab(monitor))
+	cell = cv2.cvtColor(cell, cv2.COLOR_BGRA2GRAY)
+	for i in range(0, length):
+		for j in range(0, length):
+			if cell[i][j] < 100:
+				cell[i][j] = 0
+			else:
+				cell[i][j] = 255
+	np.savetxt("6-2.txt", cell, fmt='%3u')
+	return cell
 
 
 def understandTheGrid():
@@ -88,12 +108,19 @@ if __name__ == '__main__':
 	generateOffsetMatrix()
 	print(offsetMatrix["x"])
 	print(offsetMatrix["y"])
-	# takeScreenshotOfASpecificArea(topLeft, bottomRight)
+
+	# x, y = 1,0 # 7
+	# x, y = 0,6 # 6
+	x, y = 3,1 # 6
+	test = takeScreenshotOfCell(offsetMatrix["x"][x], offsetMatrix["y"][y])
+	test = np.array(test)
+	cv2.imwrite("./images/cell-2.png", test)
+	# cv2.imwrite("./images/cell-2.png", test)
 	
 	# pyautogui.moveTo(topLeft, duration=duration)
 	# pyautogui.moveTo(topRight, duration=duration)
 	# pyautogui.moveTo(bottomRight, duration=duration)
 	# pyautogui.moveTo(bottomLeft, duration=duration)
 	# pyautogui.moveTo(newGameButton, duration=duration)
-	understandTheGrid()
-			
+	# understandTheGrid()
+	
