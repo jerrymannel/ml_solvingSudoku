@@ -139,8 +139,7 @@ def sudokuSolver():
 
 
 if __name__ == '__main__':
-	# topLeft = findTopLeftCorner()
-	topLeft = (55, 267)
+	topLeft = findTopLeftCorner()
 	topRight = (topLeft[0] + widthOfGrid, topLeft[1])
 	bottomRight = (topLeft[0] + widthOfGrid, topLeft[1] + heightOfGrid)
 	bottomLeft = (topLeft[0], topLeft[1] + heightOfGrid)
