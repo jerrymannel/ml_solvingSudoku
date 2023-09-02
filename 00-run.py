@@ -165,7 +165,7 @@ if __name__ == '__main__':
 	print(offsetMatrix["x"])
 	print(offsetMatrix["y"])
 
-	counter = 5
+	counter = 2
 	while counter > 0:
 		sudokuSolver()
 		time.sleep(1)
